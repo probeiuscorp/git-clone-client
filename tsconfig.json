@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "declaration": true,
+        "outDir": "dist",
+        "incremental": true,
+    },
+    "files": [
+        "git-clone-client.ts",
+    ],
+}
