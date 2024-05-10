@@ -2,16 +2,29 @@ import { createInflate } from 'node:zlib';
 import { buffer as bufferFromStream } from 'node:stream/consumers';
 import { createHash } from 'node:crypto';
 
+export type GitPacketLine = {
+    type: 'flush';
+} | {
+    type: 'data';
+    payload: Buffer;
+};
 export function readPacketLines(buffer: Buffer) {
-    const packetLines: Buffer[] = [];
+    const packetLines: GitPacketLine[] = [];
     const len = buffer.byteLength;
     let i=0;
     while(i < len) {
         const sizeString = buffer.toString('ascii', i, i + 4);
         const size = parseInt(sizeString, 16);
-        if(size === 0) break;
-        packetLines.push(buffer.subarray(i + 4, i + size));
-        i += size;
+        if(size === 0) {
+            packetLines.push({ type: 'flush' });
+            i += 4;
+        } else {
+            packetLines.push({
+                type: 'data',
+                payload: buffer.subarray(i + 4, i + size),
+            });
+            i += size;
+        }
     }
     return packetLines;
 }
@@ -129,9 +142,15 @@ export function readTree(tree: Buffer) {
 
 export function readResponse(buffer: Buffer) {
     const packetLines = readPacketLines(buffer);
-    const dataBuffers = packetLines.flatMap((buffer) => {
-        if(buffer.readUint8() !== 1) return [];
-        return buffer.subarray(1);
+    const dataBuffers = packetLines.flatMap((packetLine) => {
+        if(packetLine.type === 'data') {
+            const { payload } = packetLine;
+            const band = payload.readUint8();
+            if(band === 1) {
+                return payload.subarray(1);
+            }
+        }
+        return [];
     });
     const objectData = Buffer.concat(dataBuffers);
     return readPack(objectData);
