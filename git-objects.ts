@@ -61,7 +61,7 @@ export const objectTypeNameById: Record<number, string> = {
 };
 
 export interface GitObject {
-    objectId: Buffer;
+    objectId: string;
     objectType: number;
     size: number;
     content: Buffer;
@@ -109,7 +109,7 @@ export async function readObject(buffer: Buffer, offset: number): Promise<GitObj
     hashOffset += inflatedSizeString.length;
     hashContent.writeUint8(0x00, hashOffset++);
     hashContent.set(inflated, hashOffset);
-    const objectId = hash.update(hashContent).digest();
+    const objectId = hash.update(hashContent).digest('hex');
 
     return {
         objectId,
@@ -123,7 +123,7 @@ export async function readObject(buffer: Buffer, offset: number): Promise<GitObj
 export interface GitTreeEntry {
     mode: string;
     filename: string;
-    objectId: Buffer;
+    objectId: string;
 }
 export function readTree(tree: Buffer) {
     let i=0;
@@ -134,7 +134,7 @@ export function readTree(tree: Buffer) {
         const start = ++i;
         while(tree.readUint8(i++));
         const filename = tree.toString('ascii', start, i - 1);
-        const objectId = tree.subarray(i, i += 20);
+        const objectId = tree.toString('hex', i, i += 20);
         entries.push({ mode, filename, objectId });
     }
     return entries;
