@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
         "strict": true,
+        "target": "ES2023",
         "declaration": true,
         "outDir": "dist",
         "incremental": true,
