@@ -6,6 +6,8 @@
         "incremental": true,
     },
     "files": [
+        "git-objects.ts",
+        "git-upload-pack.ts",
         "git-clone-client.ts",
     ],
 }
