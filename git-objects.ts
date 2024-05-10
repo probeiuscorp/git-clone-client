@@ -140,6 +140,26 @@ export function readTree(tree: Buffer) {
     return entries;
 }
 
+const parent = Buffer.from('parent', 'ascii');
+export interface GitCommitLinks {
+    tree: string;
+    parents: string[];
+}
+export function readCommitLinks(commit: Buffer): GitCommitLinks & { end: number } {
+    const tree = commit.toString('ascii', 5, 45);
+    const parents: string[] = [];
+    let offset = 46;
+    while(parent.compare(commit, offset, offset + 6) === 0) {
+        parents.push(commit.toString('ascii', offset + 7, offset + 47));
+        offset += 48;
+    }
+    return {
+        tree,
+        parents,
+        end: offset,
+    };
+}
+
 export function readResponse(buffer: Buffer) {
     const packetLines = readPacketLines(buffer);
     const dataBuffers = packetLines.flatMap((packetLine) => {
