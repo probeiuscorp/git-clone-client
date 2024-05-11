@@ -1,3 +1,6 @@
+import { findCommitOfRef } from './git-find-ref';
+import { ShallowCloneCommitOptions, shallowCloneCommit } from './git-upload-pack';
+
 export type GitInfoRequest = { type: 'req-info' }
 export type GitUploadPackRequest = { type: 'upload-pack'; body: string }
 export type GitRequest = GitInfoRequest | GitUploadPackRequest;
@@ -20,3 +23,8 @@ export function makeFetchLikeRequest(fetch: Fetch, url: string, request: GitRequ
     )).then((res) => res.arrayBuffer()).then(Buffer.from);
 };
 export const httpFetchUsing = (fetch: Fetch) => (url: string): MakeRequest => (request) => makeFetchLikeRequest(fetch, url, request);
+
+export async function shallowCloneRef(ref: string, options: ShallowCloneCommitOptions<GitRequest>) {
+    const commit = await findCommitOfRef(ref, options.makeRequest);
+    return await shallowCloneCommit(commit, options);
+}
