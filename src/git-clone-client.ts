@@ -9,7 +9,7 @@ export type MakeRequest<T extends GitRequest = GitRequest> = (request: T) => Pro
 type Fetch = (url: string, initiator?: {
     method?: 'GET' | 'POST';
     body?: string;
-    headers?: Partial<Record<string, string>>;
+    headers?: Record<string, string>;
 }) => Promise<{
     // All function members are methods but not all methods are function members
     arrayBuffer(): Promise<ArrayBuffer>;
