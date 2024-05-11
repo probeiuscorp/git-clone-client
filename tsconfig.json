@@ -5,8 +5,11 @@
         "declaration": true,
         "outDir": "dist",
         "incremental": true,
+        "isolatedModules": true,
     },
     "files": [
+        "index.ts",
+        "core.ts",
         "git-find-ref.ts",
         "git-objects.ts",
         "git-upload-pack.ts",
