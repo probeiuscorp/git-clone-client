@@ -1,7 +1,7 @@
 {
   "name": "git-clone-client",
   "version": "0.0.1",
-  "description": "No file system Git clone client for Node.js",
+  "description": "No dependency, no file-system Git shallow clone client for Node.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
