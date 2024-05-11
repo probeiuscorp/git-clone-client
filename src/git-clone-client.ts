@@ -6,7 +6,14 @@ export type GitUploadPackRequest = { type: 'upload-pack'; body: string }
 export type GitRequest = GitInfoRequest | GitUploadPackRequest;
 export type MakeRequest<T extends GitRequest = GitRequest> = (request: T) => Promise<Buffer>;
 
-type Fetch = typeof fetch;
+type Fetch = (url: string, initiator?: {
+    method?: 'GET' | 'POST';
+    body?: string;
+    headers?: Partial<Record<string, string>>;
+}) => Promise<{
+    // All function members are methods but not all methods are function members
+    arrayBuffer(): Promise<ArrayBuffer>;
+}>;
 export function makeFetchLikeRequest(fetch: Fetch, url: string, request: GitRequest) {
     return (request.type === 'req-info' ? (
         fetch(`${url}/info/refs?service=git-upload-pack`)
