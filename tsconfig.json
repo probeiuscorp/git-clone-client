@@ -9,11 +9,11 @@
         "isolatedModules": true,
     },
     "files": [
-        "index.ts",
-        "core.ts",
-        "git-find-ref.ts",
-        "git-objects.ts",
-        "git-upload-pack.ts",
-        "git-clone-client.ts",
+        "src/index.ts",
+        "src/core.ts",
+        "src/git-find-ref.ts",
+        "src/git-objects.ts",
+        "src/git-upload-pack.ts",
+        "src/git-clone-client.ts",
     ],
 }

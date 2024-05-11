@@ -19,4 +19,4 @@ const fetchRepository = httpFetchUsing(fetch);
 
 > [!NOTE]
 > This package depends on node:zlib, node:crypto and node:buffer.
-> To use different packages, fork and change imports of `git-objects.ts`.
+> To use different packages, fork and change imports of `src/git-objects.ts`.
