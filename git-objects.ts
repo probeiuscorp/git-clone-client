@@ -159,19 +159,3 @@ export function readCommitLinks(commit: Buffer): GitCommitLinks & { end: number 
         end: offset,
     };
 }
-
-export function readResponse(buffer: Buffer) {
-    const packetLines = readPacketLines(buffer);
-    const dataBuffers = packetLines.flatMap((packetLine) => {
-        if(packetLine.type === 'data') {
-            const { payload } = packetLine;
-            const band = payload.readUint8();
-            if(band === 1) {
-                return payload.subarray(1);
-            }
-        }
-        return [];
-    });
-    const objectData = Buffer.concat(dataBuffers);
-    return readPack(objectData);
-}
