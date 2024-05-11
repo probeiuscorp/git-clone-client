@@ -1,5 +1,5 @@
+import { GitInfoRequest, MakeRequest } from './git-clone-client';
 import { readPacketLines } from './git-objects';
-import { GitInfoRequest, MakeRequest } from './git-upload-pack';
 
 export function findCommitOfRefInAdvertisement(buffer: Buffer, ref: Buffer) {
     let hasFlush = false;

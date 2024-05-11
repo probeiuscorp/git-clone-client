@@ -1,22 +1,5 @@
+import { GitRequest, GitUploadPackRequest, MakeRequest } from './git-clone-client';
 import { GitPacketLine, GitTreeEntry, readCommitLinks, readPack, readPacketLines, readTree } from './git-objects';
-
-type Fetch = typeof fetch;
-export const makeFetchLikeRequest = (fetch: Fetch, url: string, request: GitRequest) => {
-    return (request.type === 'req-info' ? (
-        fetch(`${url}/info/refs?service=git-upload-pack`)
-    ) : (
-        fetch(`${url}/git-upload-pack`, {
-            method: 'POST',
-            body: request.body,
-            headers: {
-                'Content-Type': 'application/x-git-upload-pack-request',
-                accept: 'application/x-git-upload-pack-result',
-                'Content-Length': request.body.length.toString(),
-            },
-        })
-    )).then((res) => res.arrayBuffer()).then(Buffer.from);
-};
-export const httpFetchUsing = (fetch: Fetch) => (url: string): MakeRequest => (request) => makeFetchLikeRequest(fetch, url, request);
 
 function filterLinesContainingPacks(lines: GitPacketLine[]): Buffer[] {
     let isData = false;
@@ -47,12 +30,8 @@ function formatLine(line: string) {
 }
 export const isGitModeDirectory = (mode: string) => mode[0] === '4';
 
-export type GitInfoRequest = { type: 'req-info' }
-export type GitUploadPackRequest = { type: 'upload-pack'; body: string }
-export type GitRequest = GitInfoRequest | GitUploadPackRequest;
-export type MakeRequest<T extends GitRequest = GitRequest> = (request: T) => Promise<Buffer>;
-export interface ShallowCloneCommitOptions {
-    makeRequest: MakeRequest<GitUploadPackRequest>;
+export interface ShallowCloneCommitOptions<T extends GitRequest = GitUploadPackRequest> {
+    makeRequest: MakeRequest<T>;
     filter?: (filepath: string, isDirectory: boolean, depth: number, filename: string) => boolean;
 }
 export async function shallowCloneCommit(commit: string, { makeRequest, filter }: ShallowCloneCommitOptions) {
