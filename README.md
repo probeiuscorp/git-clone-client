@@ -7,7 +7,7 @@ import { shallowCloneRef, httpFetchUsing } from 'git-clone-client';
 async function handleRequest(req, res) {
     const files = await shallowCloneRef('refs/heads/main', {
         // Provide fetching method
-        makeRequest: fetchRepository(req.query.url),
+        makeRequest: fetchRepository('https://github.com/probeiuscorp/git-clone-client.git'),
         // Partial clone -- only fetch files in the src/ directory
         filter: (filepath) => filepath.startsWith('src/'),
     });
@@ -18,5 +18,5 @@ const fetchRepository = httpFetchUsing(fetch);
 ```
 
 > [!NOTE]
-> This package depends on node:zlib, node:crypto and node:buffer.
+> This package uses node:zlib, node:crypto and node:buffer.
 > To use different packages, fork and change imports of `src/git-objects.ts`.
