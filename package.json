@@ -11,6 +11,7 @@
     }
   },
   "scripts": {
+    "build": "npx tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -27,6 +28,7 @@
   },
   "homepage": "https://github.com/probeiuscorp/git-clone-client#readme",
   "devDependencies": {
-    "@types/node": "^20.12.11"
+    "@types/node": "^20.12.11",
+    "typescript": "^5.4.5"
   }
 }
