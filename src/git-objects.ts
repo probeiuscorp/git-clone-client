@@ -42,10 +42,10 @@ export async function readPack(pack: Buffer): Promise<GitPack> {
     const nObjects = pack.readUInt32BE(offset);
     offset += 4;
 
-    const objects = new Array<GitObject>(nObjects);
+    const objects: GitObject[] = [];
     for(let i=0;i<nObjects;i++) {
         const object = await readObject(pack, offset);
-        objects[i] = object;
+        objects.push(object);
         offset = object.end;
     }
     return { type, objects, version };
