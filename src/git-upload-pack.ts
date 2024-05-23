@@ -1,6 +1,8 @@
 import { GitRequest, GitUploadPackRequest, MakeRequest } from './git-clone-client';
 import { GitPacketLine, GitTreeEntry, readCommitLinks, readPack, readPacketLines, readTree } from './git-objects';
 
+const nil: readonly never[] = [];
+
 function filterLinesContainingPacks(lines: GitPacketLine[]): Buffer[] {
     let isData = false;
     const dataLines: Buffer[] = [];
@@ -87,10 +89,11 @@ export async function shallowCloneCommit(commit: string, { makeRequest, filter }
         + formatLine('filter blob:none')
         + doneLine;
     const filesPack = await requestAndReadPackFile(filesPackRequest);
-    return filesPack.objects.map(({ objectId, content }) => {
+    return filesPack.objects.flatMap(({ objectId, content }) => {
         const filepath = blobFilenames.get(objectId);
         if(filepath === undefined) {
-            throw new Error(`Bogus response from server: Extraneous object "${objectId}" included in pack`);
+            console.warn(new Error(`Bogus response from server: Extraneous object "${objectId}" included in pack`));
+            return nil;
         }
         return { content, filepath };
     });
